@@ -6,15 +6,15 @@ var repetida = document.querySelector("#repetida");
 var pantalla = document.querySelector("#ahorcado");
 
 // LISTADO DE PALABRAS
-var listaPalabras = ['ESTUDIO', 'EMPATIA', 'TRIUNFAR', 'DESARROLLO', 'CRECIMIENTO', 'MILAGRO', 'CONFIANZA', 'FUTURO', 'ALEGRIA', 'FRUTA', 'MANZANA', 'NARANJA', 'MANDARINA', 'PROBLEMA','VERDURA', 'EUROPA', 'AMERICA', 'AFRICA', 'OCEANIA', 'ASIA', 'ESCRITORIO', 'COMEDOR', 'COCINA', 'DORMITORIO', 'ALURA', 'ORACLE', 'SILLON', 'ESTUDIAR'];
+var listaPalabras = ['ESTUDIO', 'EMPATIA', 'TRIUNFAR', 'DESARROLLO', 'CRECIMIENTO', 'MILAGRO', 'CONFIANZA', 'FUTURO', 'ALEGRIA', 'FRUTA', 'MANZANA', 'NARANJA', 'MANDARINA', 'PROBLEMA','VERDURA', 'EUROPA', 'AMERICA', 'AFRICA', 'OCEANIA', 'ASIA', 'ESCRITORIO', 'COMEDOR', 'COCINA', 'DORMITORIO', 'ALURA', 'ORACLE', 'SILLON', 'ESTUDIAR', 'SACRIFICIO', 'PROGRAMAR'];
 
 document.querySelector(".titulo").scrollIntoView({block: "start", behavior: "smooth"});
 
-var letrasErradas = []; //Array donde se van guardando las letras equivocadas
-var letrasEncontradas = []; //Array donde se guardan las letras que van adivinando
+var letrasErradas = []; //Array para guardar letras erradas
+var letrasHalladas = []; //Array para guarda letras halladas en la palabra
 var palabra = "";
 
-/*Escucha el boton de inicio y llama a la funcion comenzar con un click */
+/*Escucha el boton de inicio y llama a la funcion comenzar*/
 jugar.addEventListener("click",comenzar);
 
 /*Inicia el juego */
@@ -22,33 +22,30 @@ function comenzar(event){
     palabraNueva.value="";
     jugar.blur(); //Saca el foco del botón. Para que no se acciones con la barra espaciadora.
     palabra = listaPalabras[Math.floor(Math.random()*listaPalabras.length)]
-    /*Inicia las variables en cero para cuando volves a empezar a jugar*/ 
+    /*Reinicia variables a cero para volver a jugar*/ 
     letrasErradas = [];
-    letrasEncontradas = [];
+    letrasHalladas = [];
     event.preventDefault();
 
     pantalla.scrollIntoView({block: "end", behavior: "smooth"}); //Se mueve la pantalla hasta el canvas
     dibujarAhorcado(letrasErradas.length);
     dibujarLineas(palabra);
-    escribirInstrucciones("INGRESE LAS LETRAS CON EL TECLADO",320,220,"darkblue");
-
-    /*Captura la letra del teclado y se la pasa a la funcion teclado*/
+    escribirInstrucciones("INGRESE LAS LETRAS CON EL TECLADO",320,170,"darkblue");
+    /*Captura letra del teclado y la pasa a la funcion teclado*/
     document.addEventListener("keypress",teclado);
 };
 
-/*Verifica la letra del teclado presionada. Si esta en la palabra la imprime y la ingresa
-en el array de letras correctas; si no esta, la imprime con los errores y la ingresa
-en el array de errores.*/
+/*Verifica la letra del teclado presionada.*/
 function teclado(event){
-    var letraNoEncontrada = true; //Variable para saber si la letra esta NO está en la palabra
+    var letraNoEncontrada = true; 
     var letraIngresada = event.key.toLocaleUpperCase()
-    if ((letrasEncontradas.length<palabra.length)&&(letrasErradas.length<9)){
+    if ((letrasHalladas.length<palabra.length)&&(letrasErradas.length<9)){
         if(validacionLetraIngresada(letraIngresada)){
             for(var z=0;z<palabra.length;z++){
                 if (letraIngresada == palabra[z]){
                     letraNoEncontrada = false;
                     escribirLetra(palabra[z],z,"darkblue");
-                    letrasEncontradas.push(letraIngresada);
+                    letrasHalladas.push(letraIngresada);
 
                 };
             };
@@ -59,20 +56,17 @@ function teclado(event){
             }
         }
     }
-
-    finDelJuego();
-    
+    finDelJuego();   
 }
 
-
 function finDelJuego(){
-    if(letrasEncontradas.length==palabra.length){
+    if(letrasHalladas.length==palabra.length){
         escribirPalabra("¡Felicitaciones ganaste!",600,400,"green");
         crearBotonVolver();
         document.removeEventListener("keypress",teclado);
     }else{
         if (letrasErradas.length==9){
-            escribirPalabra("¡Uh, Perdiste!",600,400,"red");
+            escribirPalabra("¡Fin del juego, Perdiste!",600,400,"red");
             crearBotonVolver();
             document.removeEventListener("keypress",teclado);
             for(var t in palabra){
@@ -119,3 +113,46 @@ agregarPalabra.addEventListener("click",function(event){
         }
     }
 });
+
+var abecedario = "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
+
+/*Valida que la letra ingresada sea la correcta*/
+function validacionLetraIngresada(letra){
+    var letraCorrecta = false;
+    var letraRepetida = false
+    letraCorrecta = abecedario.includes(letra);
+    letraRepetida = letrasHalladas.includes(letra);
+    if(letraCorrecta && !letraRepetida){
+        return true;
+    }else{
+        return false
+    }
+}
+
+/*Valida que la letra errada ya no este en el array de errores */
+function validacionLetraError(letraError){
+    var error = false;
+    error = letrasErradas.includes(letraError)
+    return error;
+}
+
+/*Valida que la palabra ingresada no tenga caracteres especiales ni numeros */
+function validarPalabraNueva(palabra){
+
+    for(i=0;i<palabra.length;i++){
+        if (!letraAbecedario(palabra[i])){
+            return false;
+        }
+    }
+    return true;
+}
+
+/*Valida que la letra este en el abecedario */
+function letraAbecedario(letra){
+    return abecedario.includes(letra);
+}
+
+/*Valida que la palabra ingresada no este en la lista de palabras */
+function validarPalabraRepetida(palabra){
+    return listaPalabras.includes(palabra);
+}

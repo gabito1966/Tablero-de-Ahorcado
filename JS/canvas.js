@@ -6,8 +6,6 @@ var posicionLineasX = 300;
 var posicionLineasY = 700;
 var largoLinea = 70;
 
-
-
 /*Dibuja el ahorcado a medida que erran las letras*/
 function dibujarAhorcado(error){
     
@@ -98,7 +96,7 @@ function escribirLetra(letra,linea,color){
     pincel.fillText(letra,posicion+6,690);
 }
 
-/*Escribe las que son error */
+/*Escribe las letras que no figuran en la palabra */
 function escribirLetraError(letra,error){
     let posicion = 600 + (50*error);
     pincel.beginPath();
