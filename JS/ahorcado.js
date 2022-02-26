@@ -95,7 +95,7 @@ agregarPalabra.addEventListener("click",function(event){
         setTimeout(function(){
             error.classList.add("invisible");
         },2000);
-        
+       
     }else{
         if(validarPalabraRepetida(palabraIngresada)){
             repetida.classList.remove("invisible");

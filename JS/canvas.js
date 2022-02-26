@@ -12,7 +12,7 @@ function dibujarAhorcado(error){
     if(error == 0){
         //Color de fondo
         pincel.beginPath();
-        pincel.fillStyle = "NavajoWhite";
+        pincel.fillStyle = "MistyRose";
         pincel.fillRect(0,0,1200,800);
 
         //Base del ahorcado
@@ -121,7 +121,7 @@ function escribirInstrucciones(palabra,posicionX,posicionY,color){
     pincel.fillText(palabra,posicionX,posicionY);
 }
 
-/*Crea el Botón "INICIO" para volver al comienzo de la página */
+/*Crea el Botón "VOLVER" para volver al comienzo de la página */
 function crearBotonVolver(){
     pincel.beginPath();
     pincel.fillStyle = "darkgrey"
@@ -131,7 +131,7 @@ function crearBotonVolver(){
     pincel.fillStyle = "darkred";
     pincel.fillText("Volver",500,760);
 }
-    pincel.arc(x, y, 30, 0, 2*3.14);
+    pincel.arc(x, y, 30, 0, 2*Math.PI);
     pincel.stroke();
 
 
@@ -165,9 +165,10 @@ document.addEventListener("keydown",function(evento){
             //Si la letra no esta en el texto dibujamos la letra en erradas
             if(contadorErradas == largoTexto){
 
-                //Sabemos que si la letra errada ya fue primida antes, entonces no pierde un intento
+                //Sabemos que si la letra errada ya fue oprimida antes, entonces no pierde un intento
                 if(letraApretada == false){
                     IntentoUsado += 1;
+                   
                 }
                 dibujarLetrasErradas(LetraEnMayuscula, IntentoUsado);
             }
